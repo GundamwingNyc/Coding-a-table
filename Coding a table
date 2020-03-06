@@ -1,0 +1,86 @@
+/* Bar graph example using a .csv table
+   Adapted from 2016 Processing program */
+
+//Seting up the variables
+let table;
+let aPallete;
+let tSize = 20;
+let multiple = 75;
+
+
+function preload() {
+  //Loading csv files
+  table = loadTable('favorite animal.csv', 'csv');
+
+  //loading the colors .txt file
+  aPallete = loadStrings("colors.txt");
+
+}
+//Creating the canvas
+function setup() {
+  createCanvas(600, 700);
+
+  //establishing the amount of rows
+  itemCount = table.getRowCount();
+}
+
+function draw() {
+  background(200); //draws the background
+
+  //Calls the showbar function
+  showBar(itemCount, height);
+
+  showBar(itemCount, 200);
+
+  //prevennts a loop from happening
+  noLoop();
+}
+//calls the showbar funtion based on the item count
+// base is Height
+function showBar(itemCount, base) {
+
+  // size of the text
+  textSize(tSize);
+
+  //for loop, looping through every month
+  for (let i = 0; i < itemCount; i++) {
+
+    // calling table, which is the file w/ data setting up the rows
+    let str = table.getString(i, 0);
+
+    //the number of birthdays in every month// parsint takes a string and returns an integer
+    let numItems = parseInt(table.getString(i, 1));
+
+    // Width of the bars divied by the amount of rows
+    let barWidth = (width / itemCount) - 5;
+
+    //Position of the bar in relation to the with of the bar
+    let xPos = 10 + i * barWidth;
+
+    //how many birthdays are in a month
+    let barHeight = numItems * multiple;
+
+    //position of the rows based on the height
+    let yPos = base - barHeight;
+
+    //print the string, based on the value of the item count, then adding the string  w/ the barheight
+    print(str + " " + itemCount + " " + barHeight);
+
+    //fill color using i = 0
+    fill(aPallete[i]);
+
+    //position of the rect, dimension of the rect, position of text based on the value of PI divided by the width of the bar divided by the height of the bar minus 10 pixels
+    rect(xPos, yPos, barWidth, barHeight);
+    positionText(str, -PI / 2, xPos + barWidth / 2, yPos + barHeight - 10);
+  }
+}
+
+    //series of functions
+function positionText(theText, angle, tx, ty) {
+  push();
+  translate(tx, ty);
+  rotate(angle);
+  fill(0);
+  text(theText, 0, 0);
+  pop();
+}
